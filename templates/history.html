@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Transactions
+{% endblock %}
+
+{% block main %}
+
+    <table class="table table-bordered table-striped mx-auto w-auto text-center">
+        <thead>
+            <th>Transaction</th>
+            <th>Symbol</th>
+            <th>Shares</th>
+            <th>Total</th>
+            <th>Date and Time</th>
+        </thead>
+        <tbody>
+            {% for transaction in transactions %}
+                <tr>
+                    <td>{{transaction.transaction_type}}</td>
+                    <td>{{transaction.symbol}}</td>
+                    {% if transaction.shares>0 %}
+                        <td>{{transaction.shares}}</td>
+                    {% endif %}
+                    {% if transaction.shares<0 %}
+                        <td>{{transaction.shares * -1 }}</td>
+                    {% endif %}
+                    <td>{{transaction.transaction_price | usd}}</td>
+                    <td>{{transaction.datetime}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+
+
+    </table>
+
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    {{username}}'s Quote
+{% endblock %}
+
+{% block main %}
+    <div class="mb-3">
+        <table class="table table-bordered table-striped mx-auto w-auto text-center">
+            <tr>
+                <th>Stock Name</th>
+                <td>{{ name }}</td>
+            </tr>
+            <tr>
+                <th>Stock Price</th>
+                <td>{{ price | usd }}</td>
+            </tr>
+            <tr>
+                <th>Stock Symbol</th>
+                <td>{{ symbol }}</td>
+            </tr>
+        </table>
+    </div>
+{% endblock %}
