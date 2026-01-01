@@ -39,7 +39,7 @@ def index():
     user_id = session["user_id"]
 
     rows = db.execute(
-        "SELECT symbol, SUM(shares) AS shares FROM transactions WHERE user_id = ? GROUP BY symbol", user_id)
+    "SELECT symbol, SUM(shares) AS shares FROM transactions WHERE user_id = ? GROUP BY symbol HAVING SUM(shares) > 0", user_id)
     cash_balance = db.execute("SELECT cash FROM users WHERE id = (?)", user_id)[0]["cash"]
     total_owned = cash_balance
 
@@ -81,8 +81,9 @@ def buy():
         price = lookup(symbol)["price"]
 
         if price * shares <= currentCash:
-            db.execute("UPDATE users SET cash = cash - (? * ?) WHERE id = (?)",
-                       lookup(symbol)["price"], shares, user_id)
+            cost = shares * price
+
+            db.execute("UPDATE users SET cash = cash - ? WHERE id = ?", cost, user_id)
             db.execute("INSERT INTO transactions (user_id, symbol, shares, price, transaction_type) VALUES (?, ?, ?, ?, ?)",
                        user_id, symbol, shares, price, 'Purchase')
 
@@ -184,7 +185,6 @@ def change():
 
         newPass = generate_password_hash(password)
         db.execute("UPDATE users SET hash = (?) WHERE username = ?", newPass, user)
-        success = True
         return redirect("/")
     return render_template("change.html")
 
@@ -297,10 +297,7 @@ def sell():
 
         sale_value = symbolExist["price"] * shares
 
-        db.execute("INSERT INTO transactions (user_id, symbol, shares, price, transaction_type) VALUES(?, ?, ?, ?, ?)",
-                   user_id, symbol, -shares, symbolExist["price"], 'Sale')
-        db.execute("UPDATE users SET cash = cash + (?) WHERE id = (?)", sale_value, user_id)
-
+        db.execute("UPDATE users SET cash = cash + ? WHERE id = ?", sale_value, user_id)
         return redirect("/")
 
     return render_template("sell.html", symbols=[symbol["symbol"] for symbol in db.execute("SELECT symbol FROM transactions")])

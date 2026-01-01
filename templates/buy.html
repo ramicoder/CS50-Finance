@@ -7,7 +7,17 @@
 {% block main %}
     <form action="/buy" method="post">
         <div class="mb-3">
-            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="symbol" placeholder="Stock symbol" required type="text">
+            <select class="form-select mx-auto w-auto" name="symbol" required autofocus>
+                <option disabled selected value="">Select a Stock</option>
+                <option value="AAPL">Apple (AAPL)</option>
+                <option value="AMZN">Amazon (AMZN)</option>
+                <option value="GOOGL">Google (GOOGL)</option>
+                <option value="META">Meta (META)</option>
+                <option value="MSFT">Microsoft (MSFT)</option>
+                <option value="NFLX">Netflix (NFLX)</option>
+                <option value="NVDA">NVIDIA (NVDA)</option>
+                <option value="TSLA">Tesla (TSLA)</option>
+            </select>
         </div>
         <div class="mb-3">
             <input class="form-control mx-auto w-auto" name="shares" placeholder="Number of shares" required type="number" min="1">
